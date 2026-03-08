@@ -1,14 +1,7 @@
 <?php
-
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "hotel_management";
-
-$conn = mysqli_connect($host,$user,$password,$database);
+$conn = mysqli_connect("localhost","root","","hotel_db");
 
 if(!$conn){
-    die("Connection failed");
+die("Database connection failed");
 }
-
 ?>

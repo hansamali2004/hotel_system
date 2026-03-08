@@ -1,42 +1,52 @@
 <?php
 session_start();
-include("db.php");
+include "db.php";
 
 if(isset($_POST['login'])){
-    
-    $username = $_POST['username'];
-    $password = $_POST['password'];
 
-    if($username == "admin" && $password == "1234"){
-        $_SESSION['admin'] = $username;
-        header("Location: dashboard.php");
-    }else{
-        echo "Invalid Login";
-    }
+$username=$_POST['username'];
+$password=$_POST['password'];
+
+$q=mysqli_query($conn,"SELECT * FROM users WHERE username='$username' AND password='$password'");
+$user=mysqli_fetch_assoc($q);
+
+if($user){
+$_SESSION['user']=$user['username'];
+$_SESSION['role']=$user['role'];
+header("location:dashboard.php");
+}else{
+$error="Invalid login";
+}
+
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hotel Management Login</title>
+<title>Hotel Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
 
-<h2>Hotel Management System</h2>
+<div class="container mt-5 col-md-4">
 
-<form method="POST">
+<h3 class="text-center">Hotel Login</h3>
 
-Username<br>
-<input type="text" name="username"><br><br>
+<?php if(isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
 
-Password<br>
-<input type="password" name="password"><br><br>
+<form method="post" class="border p-4 bg-white">
 
-<input type="submit" name="login" value="Login">
+<input class="form-control mb-3" name="username" placeholder="Username">
+
+<input type="password" class="form-control mb-3" name="password" placeholder="Password">
+
+<button class="btn btn-primary w-100" name="login">Login</button>
 
 </form>
+
+</div>
 
 </body>
 </html>

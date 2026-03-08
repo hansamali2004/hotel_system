@@ -4,21 +4,24 @@ include("db.php");
 
 if(!isset($_SESSION['admin'])){
     header("Location:index.php");
+    exit();
 }
 
+$message = "";
+
 if(isset($_POST['add'])){
-    $name = $_POST['name'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
 
     $query = "INSERT INTO customers (name, phone, email, address)
               VALUES ('$name', '$phone', '$email', '$address')";
 
     if(mysqli_query($conn, $query)){
-        echo "Customer Added Successfully";
+        $message = "Customer Added Successfully";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        $message = "Error: " . mysqli_error($conn);
     }
 }
 ?>
@@ -31,6 +34,10 @@ if(isset($_POST['add'])){
 <body>
 
 <h2>Add Customer</h2>
+
+<?php if($message != ""){ ?>
+<p><?php echo $message; ?></p>
+<?php } ?>
 
 <form method="POST">
 Name:<br>
